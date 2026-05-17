@@ -99,26 +99,6 @@ Likely topics/questions from the note:
 14. How memory and processors are connected.
 15. Pre-MST expected weight: 1 or 1.5 questions.
 
-## CLO Mapping - PVL238 VLSI Architectures
-
-| Extracted topic/question | Closest CLO | Why it maps there |
-|---|---:|---|
-| Instruction level Architecture | CLO 1, CLO 4 | Basics of processor architecture and instruction-level concepts. |
-| Till memory -> book | CLO 1, CLO 3 | Covers processor basics through memory organization. |
-| Calculate CPI | CLO 1 | CPI is part of quantitative computer design and processor performance. |
-| Memory address | CLO 3 | Addressing relates to memory organization and management. |
-| How to parallelize if we have some instruction | CLO 4 | Directly relates to instruction-level parallelism. |
-| 10 line code: how we will parallelize them | CLO 4 | Code scheduling and parallel execution are ILP topics. |
-| Pipelining -> Branching | CLO 2 | Branching creates control hazards in pipelines. |
-| Virtual memory | CLO 3 | Virtual memory is a memory management technique. |
-| Virtual page, offset | CLO 3 | These are virtual memory address translation fields. |
-| Paging and segmentation | CLO 3 | Both are memory management techniques. |
-| DMA / hardware based / compiler based [unclear] | CLO 2 or CLO 3 | If this refers to hazard handling or scheduling, it maps to CLO 2; if DMA, it maps to memory/system organization under CLO 3. |
-| Cache hit/miss | CLO 3 | Cache organization and hit/miss behavior are hierarchical memory topics. |
-| How to minimize cache misses | CLO 3 | Techniques for reducing cache misses are explicitly in the syllabus. |
-| Snooping | CLO 4, CLO 3 | Snooping is tied to cache coherence in multiprocessor/shared-memory systems. |
-| Network structure | CLO 4 | Interconnection networks are part of multiprocessor architecture. |
-| How memory and processor are connected | CLO 4, CLO 3 | Connects memory hierarchy with processor/multiprocessor organization. |
 
 ## CLO-Wise Study Plan
 
