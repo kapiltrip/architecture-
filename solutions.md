@@ -10,6 +10,8 @@ This file will be built question by question from [expected.md](<expected.md>).
 - [Memory.pdf](<MaterialToRefer/Memory.pdf>) - memory hierarchy, SRAM/DRAM, cache, locality, inclusion, coherence, hit/miss, mapping, replacement, virtual memory.
 - [VLSI ARC.pptx](<MaterialToRefer/VLSI ARC.pptx>) - basic architecture components: registers, cache, main memory, processor organization.
 - Class board image shared in chat - memory hierarchy pyramid from registers down to cache, RAM, flash/SSD, hard disk, and tapes.
+- Screenshot exported for exam diagram: [Memory.pdf page 1 memory hierarchy](<images/solutions/q1/memory_pdf_page_01_memory_hierarchy.png>).
+- Class board screenshot for exam diagram: [class board memory hierarchy](<images/solutions/q1/class_board_memory_hierarchy.png>).
 
 ---
 
@@ -17,7 +19,61 @@ This file will be built question by question from [expected.md](<expected.md>).
 
 **CLO:** CLO 3 - Memory Organization and Management; CLO 4 - Advanced Architectures support.
 
-### 1. Short Exam Answer
+### PPT/PDF Figure Check
+
+Checked local material:
+- `Memory.pdf`: relevant figure found on page 1. It shows the memory hierarchy pyramid with CPU registers, cache memory, main memory, magnetic disk, optical disk, and magnetic tape.
+- `VLSI ARC.pptx`: relevant supporting slides found for computer architecture components, registers, cache, main memory, and processor organization. No better memory hierarchy figure was present there.
+- Class board screenshot: relevant figure found and saved.
+
+Use these for the diagram:
+
+![Memory hierarchy figure from Memory.pdf](<images/solutions/q1/memory_pdf_page_01_memory_hierarchy.png>)
+
+![Class board memory hierarchy figure](<images/solutions/q1/class_board_memory_hierarchy.png>)
+
+### What To Draw In Exam
+
+Draw the pyramid before writing the theory. It is the most useful diagram for this question.
+
+Your exam diagram should show:
+- Top: `Registers`
+- Then: `Cache Memory (SRAM)` or `L1/L2/L3 Cache`
+- Then: `Main Memory / RAM (DRAM)`
+- Then: `SSD / Flash / Magnetic Disk`
+- Bottom: `Magnetic Tape / Backup Storage`
+- Side arrow upward: `Cost per bit and speed increase`
+- Side arrow downward: `Capacity and access time increase`
+
+Simple exam diagram:
+
+```text
+                 Speed and cost per bit increase
+                              ^
+                              |
+                         +-----------+
+                         | Registers |
+                         +-----------+
+                         | L1 Cache  |
+                         +-----------+
+                         | L2 Cache  |
+                         +-----------+
+                         | L3 Cache  |
+                         +-----------+
+                         | Main RAM  |
+                         +-----------+
+                         | SSD/HDD   |
+                         +-----------+
+                         | Tape      |
+                         +-----------+
+                              |
+                              v
+                   Capacity and access time increase
+```
+
+Write the answer after this diagram. Mention SRAM beside cache and DRAM beside main memory because teachers usually expect that.
+
+### 1. Exam-Style Answer
 
 Hierarchical memory organization is the arrangement of storage devices in multiple levels according to speed, cost, capacity, and distance from the CPU. The CPU needs very fast access to instructions and data, but very fast memory is expensive and small. Therefore, computer systems use a memory hierarchy: small and fast memories are placed near the processor, while large and slow memories are placed farther away.
 
@@ -248,25 +304,29 @@ Cache memory is usually SRAM, so it is faster and more expensive. Main memory is
 
 This pyramid structure is useful because the CPU mostly needs a small active portion of the program at any time. Due to temporal locality, recently used items are kept in cache. Due to spatial locality, nearby items are fetched together as a cache block. If the block is present in cache, access is fast. If it is absent, the block is fetched from main memory, causing a miss penalty.
 
-### 11. Complete Long Answer
+### 11. Final 10-Mark Exam Answer To Write
 
-Hierarchical memory organization is a design technique in which the memory system is divided into several levels. Each level differs in speed, size, cost per bit, and physical distance from the processor. The highest level is closest to the CPU and gives the fastest access, but it is small and expensive. The lower levels are larger and cheaper, but slower. A typical hierarchy contains registers, cache memory, main memory, secondary storage, and tertiary storage.
+After drawing the memory hierarchy pyramid, write the answer like this:
 
-The need for memory hierarchy comes from the gap between CPU speed and memory speed. Modern processors can execute instructions very quickly, but main memory access takes much longer than a CPU cycle. If every access went directly to main memory or disk, the CPU would remain idle for many cycles. To avoid this, frequently used instructions and data are kept in faster memories such as registers and cache.
+Hierarchical memory organization is a method of organizing the storage system of a computer into multiple levels according to speed, capacity, cost per bit, and access time. The main idea is that the processor should get most of its required instructions and data from a small fast memory, while the complete program and data are stored in larger lower-level memories. Thus, the hierarchy gives the user the effect of a large memory system while giving the processor an average access time close to the faster levels.
 
-The memory hierarchy works on the principle of locality. Temporal locality says that recently accessed items are likely to be accessed again soon. Spatial locality says that items with nearby addresses are likely to be accessed close together in time. These properties allow the system to keep a small active working set in the upper levels. For example, loop instructions and loop variables show temporal locality, while array traversal shows spatial locality.
+A typical memory hierarchy contains CPU registers at the top, followed by cache memory, main memory, secondary storage, and tertiary storage. Registers are the fastest and smallest storage units and are directly used by the CPU. Cache memory is built using SRAM and stores recently or frequently used blocks of instructions and data. Main memory is built using DRAM and stores currently executing programs. SSDs, hard disks, and flash memories provide large non-volatile secondary storage, while magnetic tapes are used for backup and archival storage.
 
-When the CPU needs data, it first checks the fastest available level. If the data is present, a hit occurs. If it is absent, a miss occurs, and the data is brought from a lower level. The performance of the hierarchy is measured using average memory access time:
+The need for memory hierarchy arises because there is a large speed gap between the CPU and main memory. Modern processors can execute operations very quickly, but DRAM access takes many CPU cycles, and disk access is much slower. If every instruction and operand were fetched directly from main memory or secondary storage, the CPU would spend much of its time waiting. Therefore, frequently needed data is copied into faster levels such as cache and registers.
+
+The movement of data in a memory hierarchy happens in blocks. When the CPU requests an item, the upper level is checked first. If the item is present, it is called a hit. If the item is absent, it is called a miss, and the required block is fetched from the next lower level. The performance of the memory system can be expressed using average memory access time:
 
 ```text
 AMAT = Hit Time + Miss Rate x Miss Penalty
 ```
 
-A good memory hierarchy reduces miss rate and miss penalty so that average access time remains low.
+A good hierarchy tries to reduce hit time, miss rate, and miss penalty. This is why cache design, block size, associativity, replacement policy, and write policy are important.
 
-Inclusion is the property that contents of an upper level are also present in a lower level. For example, in an inclusive cache hierarchy, every block in L1 is also present in L2 or L3. Inclusion is useful because it simplifies tracking and coherence. If a shared lower-level cache knows which blocks exist, it can help invalidate or manage copies in upper-level private caches. However, inclusion can waste capacity because the same data is duplicated at multiple levels.
+The effectiveness of memory hierarchy depends mainly on locality of reference. Locality means that programs do not access all memory locations uniformly. Temporal locality means that if a memory location is accessed now, it is likely to be accessed again in the near future. For example, loop instructions and variables used repeatedly show temporal locality. Spatial locality means that if one memory location is accessed, nearby locations are likely to be accessed soon. For example, array traversal and sequential instruction execution show spatial locality. Due to locality, keeping recently used and nearby blocks in cache greatly improves performance.
 
-Coherence is the property that all copies of the same data remain consistent. Since a memory block may be copied in several cache levels or in different processor caches, updates must be controlled. In a single processor system, write-through and write-back policies manage consistency between cache and memory. In multiprocessor systems, snooping or directory-based cache coherence protocols are used. Without coherence, one processor may read an old value while another processor has already written a new value.
+Inclusion is another important property of a memory hierarchy. Inclusion means that the contents of an upper-level memory are also present in the next lower level. For example, in an inclusive cache hierarchy, every block present in L1 cache is also present in L2 or L3 cache. This is also called the subset property. Inclusion helps in tracking data and maintaining cache coherence, especially in multicore processors where a lower-level shared cache can know which blocks may be present in private upper-level caches. However, inclusion can waste some cache capacity because the same block is stored at more than one level.
+
+Coherence means that all copies of the same memory block must remain consistent. This is necessary because the same block may exist in L1 cache, L2 cache, L3 cache, main memory, or in the private caches of different processor cores. If one processor changes a value and another processor still reads an old cached value, the program may produce wrong results. Therefore, coherence mechanisms are used to maintain correctness. In a single processor, write-through and write-back policies maintain consistency between cache and memory. In multiprocessor systems, snooping and directory-based cache coherence protocols are used to invalidate or update stale copies.
 
 Thus, memory hierarchy improves performance by combining small fast memories with large slow memories. Locality makes it efficient, inclusion helps organize and track data across levels, and coherence ensures correctness when multiple copies of data exist.
 
