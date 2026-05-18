@@ -39,6 +39,15 @@ This file will be built question by question from [expected.md](<expected.md>).
 
 **CLO:** CLO 3 - Memory Organization and Management; CLO 4 - Advanced Architectures support.
 
+### Definitions And Why
+
+**Source basis:** [Memory.pdf](<MaterialToRefer/Memory.pdf>) and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Memory hierarchy:** layered storage ordered by speed, capacity, and cost. **Why:** it hides the CPU-memory speed gap by keeping active data near the processor.
+- **Locality of reference:** tendency of programs to reuse recent addresses or nearby addresses. **Why:** without locality, caches and virtual memory would not give good hit rates.
+- **Inclusion:** data present in an upper level is also present in a lower level. **Why:** it simplifies tracking, replacement, and coherence actions.
+- **Coherence:** all copies of the same data item should reflect a consistent value. **Why:** correctness is required when the same block exists in several caches or memory levels.
+
 ### PPT/PDF Figure Check
 
 Checked local material:
@@ -394,6 +403,10 @@ Top: fast, small, costly
 Bottom: slow, large, cheap
 ```
 
+### 15. Keyword Chain
+
+Memory hierarchy -> speed/cost/capacity tradeoff -> locality -> cache hit/miss -> AMAT -> inclusion -> coherence -> registers/cache/RAM/SSD/HDD/tape
+
 ---
 
 ## Sources Used For Q2
@@ -409,6 +422,16 @@ Bottom: slow, large, cheap
 ## Q2. Discuss Memory Management Techniques Used In Virtual Memory Systems. Explain Paging And Segmentation With Examples.
 
 **CLO:** CLO 3 - Memory Organization and Management.
+
+### Definitions And Why
+
+**Source basis:** [Virtual memory.ppt](<MaterialToRefer/Virtual memory.ppt>), [Memory.pdf](<MaterialToRefer/Memory.pdf>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Virtual memory:** separation of a program's logical address space from physical RAM. **Why:** it allows large programs, protection, sharing, and better multiprogramming.
+- **Paging:** fixed-size virtual pages mapped to fixed-size physical frames. **Why:** it avoids external fragmentation and makes allocation/replacement simple.
+- **Segmentation:** variable-size logical program parts such as code, data, heap, and stack. **Why:** it matches the programmer's logical view and supports protection per segment.
+- **TLB:** small hardware cache of recent page-table translations. **Why:** it prevents every memory reference from needing a slow page-table lookup.
+- **Page fault:** event when a referenced page is not in RAM. **Why:** it triggers demand paging from secondary storage.
 
 ### Figures To Use
 
@@ -480,6 +503,11 @@ Thus, virtual memory improves memory utilization, allows execution of large prog
 ### Draw In Exam
 
 Draw the paging address translation diagram first. If time remains, draw a small segmentation table showing `segment number -> base + offset` and write one line comparing paging and segmentation.
+
+### Keyword Chain
+
+Virtual memory -> MMU -> virtual address -> page number + offset -> page table -> frame number + offset -> TLB -> page fault -> replacement -> segmentation base + limit
+
 ## Sources Used For Q3
 
 - [pp2.ppt](<MaterialToRefer/pp2.ppt>) - cache coherence problem, snoopy protocol, write-invalidate, write-back protocol state machines.
@@ -495,6 +523,16 @@ Draw the paging address translation diagram first. If time remains, draw a small
 ## Q3. Explain Coherence Problems In Shared Memory Systems. Discuss Cache Coherence Protocols In Multiprocessor Systems.
 
 **CLO:** CLO 3 - Memory Organization and Management; CLO 4 - Advanced Architectures.
+
+### Definitions And Why
+
+**Source basis:** [pp2.ppt](<MaterialToRefer/pp2.ppt>), [DSM.ppt](<MaterialToRefer/DSM.ppt>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Cache coherence problem:** different caches may hold different values for the same memory block. **Why:** a processor may read stale data after another processor writes.
+- **Snooping protocol:** cache controllers monitor bus transactions. **Why:** it is simple and effective for small shared-bus SMP systems.
+- **Directory protocol:** a directory records which caches share or own each block. **Why:** it scales better because invalidations go only to actual sharers.
+- **Write-invalidate:** writer invalidates other copies before writing. **Why:** it reduces repeated update traffic and is the common practical approach.
+- **Write-update:** writer broadcasts the new value to sharers. **Why:** it can help read-mostly sharing but costs more bandwidth.
 
 ### Figures To Use
 
@@ -563,6 +601,10 @@ Thus, coherence problems occur because private caches may store stale copies of 
 
 Draw the cache coherence problem diagram first: three processors with private caches and one shared memory. Show old value `X = 5` in some caches and new value `X = 7` after one processor writes. Then draw a bus-based snooping diagram and write: "cache controllers snoop bus and invalidate/update copies."
 
+### Keyword Chain
+
+Shared memory -> private caches -> stale copy -> coherence -> write serialization -> snooping -> write-invalidate -> MSI/MESI -> directory -> scalable coherence
+
 ## Sources Used For Q4
 
 - [pp1.ppt](<MaterialToRefer/pp1.ppt>) - ILP definition, loop-level parallelism, loop unrolling, branch prediction, dynamic scheduling, Tomasulo algorithm.
@@ -576,6 +618,16 @@ Draw the cache coherence problem diagram first: three processors with private ca
 ## Q4. Explain The Concept Of Instruction-Level Parallelism (ILP). Discuss Various Techniques Used To Increase ILP.
 
 **CLO:** CLO 4 - ILP and Advanced Architectures.
+
+### Definitions And Why
+
+**Source basis:** [pp1.ppt](<MaterialToRefer/pp1.ppt>), [Pipelining.pdf](<MaterialToRefer/Pipelining.pdf>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Instruction-Level Parallelism (ILP):** overlap or simultaneous execution of independent instructions from one program. **Why:** it reduces effective CPI and improves throughput.
+- **Dependence:** ordering relation between instructions caused by data, names, memory, or control flow. **Why:** dependences limit how much ILP can be safely exploited.
+- **Dynamic scheduling:** hardware issues ready instructions out of program order. **Why:** it hides stalls such as cache misses and long-latency operations.
+- **Register renaming:** mapping architectural registers to different physical registers. **Why:** it removes false WAR and WAW dependences.
+- **Speculation:** executing predicted-path instructions before certainty. **Why:** it keeps the pipeline busy across branches.
 
 ### Figures To Use
 
@@ -641,6 +693,10 @@ Thus, ILP improves processor performance by finding independent instructions and
 
 Draw the Tomasulo organization diagram if the answer needs hardware detail: instruction queue, reservation stations, functional units, registers, load/store buffers, and common data bus. If the question is more general, draw a simple pipeline/multiple-issue diagram and a small two-bit branch predictor state diagram.
 
+### Keyword Chain
+
+ILP -> independent instructions -> dependences -> pipelining -> scheduling -> loop unrolling -> branch prediction -> speculation -> renaming -> dynamic scheduling -> Tomasulo
+
 ## Sources Used For Q5
 
 - [Pipelining.pdf](<MaterialToRefer/Pipelining.pdf>) - superpipelining and superscalar summary.
@@ -655,6 +711,16 @@ Draw the Tomasulo organization diagram if the answer needs hardware detail: inst
 ## Q5. Compare Superscalar, Super-Pipelined, And VLIW Processor Architectures With Suitable Block Diagrams.
 
 **CLO:** CLO 2 - Pipelining and RISC Performance; CLO 4 - ILP and Advanced Architectures.
+
+### Definitions And Why
+
+**Source basis:** [Pipelining.pdf](<MaterialToRefer/Pipelining.pdf>), [pp1.ppt](<MaterialToRefer/pp1.ppt>), [pp2.ppt](<MaterialToRefer/pp2.ppt>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Superscalar processor:** hardware issues multiple independent instructions in one clock cycle. **Why:** it increases ILP dynamically without changing the normal instruction stream.
+- **Issue width:** maximum number of instructions issued per cycle. **Why:** it decides peak instruction throughput.
+- **Super-pipelining:** pipeline is split into more, smaller stages. **Why:** it raises clock frequency but increases branch and hazard penalties.
+- **VLIW:** compiler packs several independent operations into one very long instruction word. **Why:** it gets wide execution with simpler issue hardware.
+- **Reservation station / reorder buffer:** hardware structures used in dynamic superscalar execution. **Why:** they allow out-of-order execution while preserving correct final commit order.
 
 ### Figures To Use
 
@@ -731,6 +797,10 @@ Thus, superscalar is more flexible but hardware-heavy, VLIW is simpler in hardwa
 
 Draw three small diagrams side by side. For superscalar, show one fetch/decode block feeding an issue unit and three functional units. For super-pipelined, show one long pipeline split into many stages like `IF1, IF2, ID1, ID2, EX1, EX2, MEM, WB`. For VLIW, show a compiler producing one wide instruction with slots connected to fixed functional units.
 
+### Keyword Chain
+
+Superscalar -> multiple issue -> hardware scheduling -> reservation stations -> ROB -> super-pipelined -> more stages -> higher frequency -> branch penalty -> VLIW -> compiler scheduling -> wide instruction
+
 ## Sources Used For Q6
 
 - [ParallelArchitecture_PP.ppt](<MaterialToRefer/ParallelArchitecture_PP.ppt>) - Flynn classification slides and examples.
@@ -745,6 +815,16 @@ Draw three small diagrams side by side. For superscalar, show one fetch/decode b
 ## Q6. Explain Flynn's Taxonomy Of Parallel Architectures With Suitable Examples.
 
 **CLO:** CLO 4 - ILP and Advanced Architectures.
+
+### Definitions And Why
+
+**Source basis:** [ParallelArchitecture_PP.ppt](<MaterialToRefer/ParallelArchitecture_PP.ppt>), [ParallelArchitecture.pdf](<MaterialToRefer/ParallelArchitecture.pdf>), and [pp2.ppt](<MaterialToRefer/pp2.ppt>).
+
+- **Instruction stream:** sequence of instructions executed by a processor/control unit. **Why:** Flynn classification starts by counting instruction streams.
+- **Data stream:** sequence of data items operated on by instructions. **Why:** the second Flynn axis counts whether one or many data streams are processed.
+- **SIMD:** one instruction stream operates on many data elements. **Why:** it explains vector processors, GPUs, and data-parallel workloads.
+- **MIMD:** many instruction streams operate on many data streams. **Why:** it describes multicore CPUs, SMPs, clusters, and most general-purpose parallel systems.
+- **MISD:** many instruction streams operate on one data stream. **Why:** it is rare but useful to mention for completeness and fault-tolerant/redundant processing.
 
 ### Figures To Use
 
@@ -791,6 +871,10 @@ The main benefit of Flynn's taxonomy is that it gives a simple way to classify p
 
 Draw a 2x2 matrix. Columns: single instruction and multiple instructions. Rows: single data and multiple data. Fill the cells as SISD, MISD, SIMD, and MIMD, and write one example in each cell.
 
+### Keyword Chain
+
+Flynn -> instruction stream -> data stream -> SISD -> SIMD -> data-level parallelism -> MISD rare -> MIMD -> thread-level parallelism -> multicore/cluster
+
 ## Sources Used For Q7
 
 - [pp2.ppt](<MaterialToRefer/pp2.ppt>) - centralized vs distributed memory, SMPs, shared-memory communication model, cache coherence in SMPs.
@@ -805,6 +889,16 @@ Draw a 2x2 matrix. Columns: single instruction and multiple instructions. Rows: 
 ## Q7. Discuss Centralized Shared-Memory Multiprocessor Architecture. Explain Synchronization Techniques Used In Shared-Memory Systems.
 
 **CLO:** CLO 4 - ILP and Advanced Architectures.
+
+### Definitions And Why
+
+**Source basis:** [pp2.ppt](<MaterialToRefer/pp2.ppt>), [ParallelArchitecture_PP.ppt](<MaterialToRefer/ParallelArchitecture_PP.ppt>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Centralized shared-memory multiprocessor:** multiple processors share one physical memory and one address space. **Why:** communication is done using ordinary loads/stores to shared variables.
+- **SMP:** symmetric multiprocessor where processors have similar access to memory and I/O. **Why:** it is the common centralized shared-memory model.
+- **UMA:** uniform memory access, meaning memory access time is roughly equal for all processors. **Why:** it distinguishes centralized SMP from NUMA.
+- **Critical section:** code region accessing shared data that must not be executed by multiple threads at once. **Why:** it is the reason synchronization is needed.
+- **Atomic operation:** indivisible read-modify-write action such as test-and-set or compare-and-swap. **Why:** it is the hardware basis for locks.
 
 ### Figures To Use
 
@@ -864,6 +958,10 @@ Synchronization must be designed carefully. Too little synchronization causes in
 
 Draw processors with private caches connected to one shared bus/switch and common memory banks. Then draw a small lock flow: `test-and-set -> critical section -> unlock`. Write one line: "Synchronization protects shared data from races."
 
+### Keyword Chain
+
+Centralized shared memory -> SMP -> UMA -> shared address space -> private caches -> coherence -> race condition -> critical section -> atomic operation -> lock -> semaphore -> barrier
+
 ## Sources Used For Q8
 
 - [DSM.ppt](<MaterialToRefer/DSM.ppt>) - DSM definition, architecture, mapping manager, advantages, algorithms, coherence, consistency, granularity, IVY case study.
@@ -878,6 +976,16 @@ Draw processors with private caches connected to one shared bus/switch and commo
 ## Q8. Explain Distributed Shared-Memory Architecture In Detail. Discuss Its Advantages, Limitations, And Applications.
 
 **CLO:** CLO 3 - Memory Organization and Management; CLO 4 - ILP and Advanced Architectures.
+
+### Definitions And Why
+
+**Source basis:** [DSM.ppt](<MaterialToRefer/DSM.ppt>), [ParallelArchitecture_PP.ppt](<MaterialToRefer/ParallelArchitecture_PP.ppt>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Distributed Shared Memory (DSM):** physically distributed memories presented as one shared address space. **Why:** it gives shared-memory programming on distributed hardware.
+- **Mapping manager:** DSM component that locates shared pages/objects and maps them locally. **Why:** it hides explicit message passing from the programmer.
+- **Read replication:** keeping read-only copies of data on several nodes. **Why:** it improves read performance when reads are much more frequent than writes.
+- **Consistency model:** rule defining when writes become visible to other processors. **Why:** it decides the programmer-visible ordering of memory operations.
+- **False sharing:** unrelated variables share the same DSM page/cache block and cause unnecessary invalidations/transfers. **Why:** it is a major DSM performance problem.
 
 ### Figures To Use
 
@@ -946,6 +1054,10 @@ Applications of DSM include distributed scientific computing, clusters that want
 
 Draw three nodes connected by a network. Inside each node draw CPU, local memory, and mapping manager. Below that draw a shared virtual address space divided into pages. Show a page moving/replicating from one node to another.
 
+### Keyword Chain
+
+DSM -> physically distributed memory -> shared address space -> mapping manager -> page/object fault -> read replication -> write invalidate/update -> consistency -> granularity -> false sharing -> thrashing
+
 ## Sources Used For Q9
 
 - [ParallelArchitecture_PP.ppt](<MaterialToRefer/ParallelArchitecture_PP.ppt>) - bus, crossbar, omega/multistage, mesh, torus, hypercube, topology metrics.
@@ -960,6 +1072,16 @@ Draw three nodes connected by a network. Inside each node draw CPU, local memory
 ## Q9. Discuss Different Interconnection Networks Used In Multiprocessor Architectures. Compare Bus, Crossbar, Multistage, And Hypercube Networks.
 
 **CLO:** CLO 4 - ILP and Advanced Architectures.
+
+### Definitions And Why
+
+**Source basis:** [ParallelArchitecture_PP.ppt](<MaterialToRefer/ParallelArchitecture_PP.ppt>), [pp3.pdf](<MaterialToRefer/pp3.pdf>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Interconnection network:** communication fabric connecting processors, memories, caches, and I/O. **Why:** it determines communication latency, bandwidth, and scalability.
+- **Diameter:** maximum shortest path between any two nodes. **Why:** smaller diameter usually means lower worst-case latency.
+- **Bisection width/bandwidth:** capacity between two equal halves of the network. **Why:** it measures how well the network handles many simultaneous communications.
+- **Blocking network:** some source-destination pairs may conflict inside the network. **Why:** blocking reduces effective bandwidth under contention.
+- **Non-blocking network:** can connect non-conflicting pairs simultaneously. **Why:** it gives higher bandwidth but usually costs more.
 
 ### Figures To Use
 
@@ -1024,6 +1146,10 @@ Thus, buses are suitable for small SMPs, crossbars are good when high bandwidth 
 
 Draw four small diagrams: one shared bus line, one crossbar grid, one three-stage 2x2 Omega network, and one cube/hypercube. Then write the comparison table with cost, scalability, and blocking behavior.
 
+### Keyword Chain
+
+Interconnection network -> latency -> bandwidth -> diameter -> bisection width -> bus -> snooping/simple/contention -> crossbar -> non-blocking/expensive -> multistage -> blocking/O(N log N) -> hypercube
+
 ## Sources Used For Q10
 
 - [VLSI ARC.pptx](<MaterialToRefer/VLSI ARC.pptx>) - single-cycle vs multicycle, multicycle steps, RISC datapath, pipeline introduction.
@@ -1037,6 +1163,16 @@ Draw four small diagrams: one shared bus line, one crossbar grid, one three-stag
 ## Q10. Explain The Design Of A Multicycle RISC Processor And Discuss How Pipelining Improves Processor Performance. Also Explain Different Hazards And Their Handling Techniques.
 
 **CLO:** CLO 1 - Processor Architecture and Organization; CLO 2 - Pipelining and RISC Performance.
+
+### Definitions And Why
+
+**Source basis:** [VLSI ARC.pptx](<MaterialToRefer/VLSI ARC.pptx>), [Pipelining.pdf](<MaterialToRefer/Pipelining.pdf>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Multicycle processor:** executes one instruction through several shorter cycles. **Why:** hardware such as the ALU and memory can be reused across cycles.
+- **RISC:** reduced instruction set computer with simple load/store instructions and regular formats. **Why:** simple stages make pipelining easier.
+- **Pipeline:** datapath divided into stages so different instructions overlap. **Why:** it improves throughput even if single-instruction latency is similar.
+- **Pipeline register:** register between stages such as IF/ID or ID/EX. **Why:** it holds stage results and allows simultaneous stage operation.
+- **Hazard:** condition that prevents the next instruction from executing safely in the next cycle. **Why:** hazards explain stalls, forwarding, and flushing.
 
 ### Figures To Use
 
@@ -1086,6 +1222,10 @@ The key contrast is this: multicycle execution reuses datapath hardware over tim
 
 Draw the multicycle datapath blocks: PC, instruction memory, IR, register file, ALU, data memory, MDR, and control unit. Then draw a 5-stage timing diagram for five instructions and mark hazards as bubbles/stalls.
 
+### Keyword Chain
+
+Multicycle RISC -> IF -> ID -> EX -> MEM -> WB -> hardware reuse -> pipeline overlap -> throughput -> structural hazard -> data hazard -> control hazard -> forwarding/stall/flush
+
 ## Sources Used For Q11
 
 - [Memory.pdf](<MaterialToRefer/Memory.pdf>) - memory hierarchy and locality.
@@ -1100,6 +1240,16 @@ Draw the multicycle datapath blocks: PC, instruction memory, IR, register file, 
 ## Q11. Explain The Role Of Memory Hierarchy In Improving System Performance. Discuss Cache Coherence, Virtual Memory, And Replacement Policies.
 
 **CLO:** CLO 3 - Memory Organization and Management; CLO 4 - ILP and Advanced Architectures.
+
+### Definitions And Why
+
+**Source basis:** [Memory.pdf](<MaterialToRefer/Memory.pdf>), [Virtual memory.ppt](<MaterialToRefer/Virtual memory.ppt>), [pp2.ppt](<MaterialToRefer/pp2.ppt>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **AMAT:** average memory access time, `Hit time + Miss rate x Miss penalty`. **Why:** it gives the performance equation for memory hierarchy.
+- **Cache block/line:** fixed-size unit moved between cache and memory. **Why:** it is the unit affected by hits, misses, coherence, and replacement.
+- **Cache coherence:** rules that keep shared cached copies correct. **Why:** private caches are fast but can create stale shared data.
+- **Virtual memory:** hardware/OS mechanism mapping virtual pages to physical frames. **Why:** it gives protection, demand paging, and large address spaces.
+- **Replacement policy:** rule for choosing a victim block/page. **Why:** a good victim choice reduces future misses and page faults.
 
 ### Figures To Use
 
@@ -1153,6 +1303,10 @@ Thus, memory hierarchy improves performance by giving the illusion of a large, f
 
 Draw the memory hierarchy pyramid and write AMAT beside it. Then add three side notes: coherence keeps shared cached copies correct, virtual memory maps virtual pages to frames, and replacement chooses the victim block/page on a miss.
 
+### Keyword Chain
+
+Memory hierarchy -> locality -> cache block -> hit/miss -> AMAT -> coherence -> virtual memory -> TLB -> page fault -> replacement policy -> FIFO/LRU/Clock -> performance
+
 ## Sources Used For Q12
 
 - [Pipelining.pdf](<MaterialToRefer/Pipelining.pdf>) - pipeline depth tradeoff and superpipelining note.
@@ -1166,6 +1320,16 @@ Draw the memory hierarchy pyramid and write AMAT beside it. Then add three side 
 ## Q12. Discuss The Impact Of Pipeline Depth On Processor Performance. Explain The Associated Challenges And Optimization Methods.
 
 **CLO:** CLO 2 - Pipelining and RISC Performance.
+
+### Definitions And Why
+
+**Source basis:** [Pipelining.pdf](<MaterialToRefer/Pipelining.pdf>), [VLSI ARC.pptx](<MaterialToRefer/VLSI ARC.pptx>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Pipeline depth:** number of stages in the instruction pipeline. **Why:** more stages can reduce clock period but increase penalties.
+- **Throughput:** instructions completed per unit time. **Why:** pipelining mainly improves throughput, not necessarily single-instruction latency.
+- **Latch/register overhead:** delay added by pipeline registers between stages. **Why:** it limits the benefit of making stages too small.
+- **Branch misprediction penalty:** lost cycles when wrong-path instructions are flushed. **Why:** the penalty usually grows with deeper pipelines.
+- **Stage balancing:** splitting work so each stage has similar delay. **Why:** the slowest stage determines clock period.
 
 ### Figures To Use
 
@@ -1208,6 +1372,10 @@ Thus, increasing pipeline depth improves performance only up to an optimum point
 
 Draw a graph with pipeline depth on the x-axis and performance on the y-axis. Show performance rising first, reaching a best region, then falling. On the side draw a deep pipeline and mark flushed stages after a branch misprediction.
 
+### Keyword Chain
+
+Pipeline depth -> smaller stages -> shorter clock -> higher throughput -> latch overhead -> stage imbalance -> branch penalty -> data hazards -> forwarding paths -> prediction -> optimum depth
+
 ## Sources Used For Q13
 
 - [VLSI ARC.pptx](<MaterialToRefer/VLSI ARC.pptx>) - performance metrics, quantitative design, RISC, datapath, pipeline, memory hierarchy.
@@ -1224,6 +1392,16 @@ Draw a graph with pipeline depth on the x-axis and performance on the y-axis. Sh
 ## Q13. Design Considerations For High-Performance Processors Include Pipelining, Cache Hierarchy, ILP, And Multiprocessing. Discuss These Aspects In Detail With Suitable Examples.
 
 **CLO:** CLO 1, CLO 2, CLO 3, and CLO 4.
+
+### Definitions And Why
+
+**Source basis:** [VLSI ARC.pptx](<MaterialToRefer/VLSI ARC.pptx>), [Pipelining.pdf](<MaterialToRefer/Pipelining.pdf>), [Memory.pdf](<MaterialToRefer/Memory.pdf>), [pp1.ppt](<MaterialToRefer/pp1.ppt>), and [pp2.ppt](<MaterialToRefer/pp2.ppt>).
+
+- **CPU time equation:** `Instruction Count x CPI x Clock Cycle Time`. **Why:** every high-performance design choice should reduce one of these terms.
+- **Pipelining:** overlaps instruction stages. **Why:** it mainly reduces effective CPI by increasing throughput.
+- **Cache hierarchy:** small fast caches backed by larger slower memory. **Why:** it reduces memory stall time.
+- **ILP:** parallelism among independent instructions inside one program. **Why:** it lets one core finish more work per cycle.
+- **Multiprocessing:** multiple cores/processors execute multiple threads or processes. **Why:** it exploits thread-level parallelism beyond one core.
 
 ### Figures To Use
 
@@ -1272,6 +1450,10 @@ Thus, high-performance processors are designed by combining fast pipelines, effi
 
 Draw the CPU performance equation in the center. Around it draw four blocks: pipelining, cache hierarchy, ILP, and multiprocessing. For each block, write one benefit and one challenge.
 
+### Keyword Chain
+
+CPU time -> instruction count -> CPI -> clock cycle time -> pipelining -> cache hierarchy -> ILP -> branch prediction -> superscalar/OOO -> multiprocessing -> coherence/synchronization -> balanced design
+
 ## Sources Used For Q14
 
 - [VLSI ARC.pptx](<MaterialToRefer/VLSI ARC.pptx>) - processor organization, datapath, control unit, ALU, registers, buses, memory hierarchy.
@@ -1285,6 +1467,16 @@ Draw the CPU performance equation in the center. Around it draw four blocks: pip
 ## Q14. Explain Processor Organization And Architectural Overview Of Modern Computer Systems. Discuss The Role Of ALU, Control Unit, Registers, Buses, And Memory Hierarchy.
 
 **CLO:** CLO 1 - Processor Architecture and Organization; CLO 3 - Memory Organization and Management.
+
+### Definitions And Why
+
+**Source basis:** [VLSI ARC.pptx](<MaterialToRefer/VLSI ARC.pptx>), [Memory.pdf](<MaterialToRefer/Memory.pdf>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Processor organization:** internal arrangement of datapath, control, registers, buses, and memory interface. **Why:** it explains how instructions are actually executed.
+- **ALU:** arithmetic logic unit for arithmetic, logical, shift, and comparison operations. **Why:** it is the main computation block.
+- **Control unit:** hardware that decodes instructions and generates control signals. **Why:** it coordinates datapath movement every cycle.
+- **Register file:** small fast storage inside the CPU. **Why:** it supplies operands faster than memory.
+- **Bus/interconnect:** path carrying data, address, and control information. **Why:** components need communication channels to execute instructions.
 
 ### Figures To Use
 
@@ -1337,6 +1529,10 @@ Thus, the ALU performs computation, the control unit directs operations, registe
 
 Draw a CPU box containing control unit, register file, ALU, PC/IR, and internal buses. Connect the CPU to cache, main memory, I/O/storage, and system bus. Then explain each component in one paragraph.
 
+### Keyword Chain
+
+Processor organization -> datapath -> control unit -> ALU -> register file -> PC/IR -> buses -> cache -> main memory -> I/O -> fetch-decode-execute -> write back
+
 ## Sources Used For Q15
 
 - [Pipelining.pdf](<MaterialToRefer/Pipelining.pdf>) - 5-stage pipeline, hazards, forwarding, stalling, interlocking.
@@ -1351,6 +1547,16 @@ Draw a CPU box containing control unit, register file, ALU, PC/IR, and internal 
 ## Q15. Explain Data Hazards In Pipelined Processors With Suitable Timing Diagrams. Discuss Forwarding, Stalling, And Pipeline Interlocking Techniques.
 
 **CLO:** CLO 2 - Pipelining and RISC Performance.
+
+### Definitions And Why
+
+**Source basis:** [Pipelining.pdf](<MaterialToRefer/Pipelining.pdf>), [pp1.ppt](<MaterialToRefer/pp1.ppt>), and [Computer Architecture, Sixth Edition](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>).
+
+- **Data hazard:** a pipeline conflict caused by operand dependence between overlapping instructions. **Why:** a later instruction may use an old value if not handled.
+- **RAW hazard:** read-after-write true dependence. **Why:** it is the main data hazard in simple in-order RISC pipelines.
+- **Forwarding/bypassing:** send a result directly from a later pipeline register to a needed input. **Why:** it avoids waiting for write back.
+- **Stall/bubble:** inserted idle cycle in the pipeline. **Why:** it preserves correctness when data is not ready.
+- **Pipeline interlock:** hardware that detects a hazard and automatically stalls. **Why:** it prevents incorrect execution without relying only on the compiler.
 
 ### Figures To Use
 
@@ -1424,3 +1630,7 @@ Thus, data hazards are caused by operand dependences between overlapping instruc
 ### Draw In Exam
 
 Draw three timing diagrams: RAW without forwarding with two stalls, RAW with forwarding and no stall, and load-use with one stall. Mark stages as `IF ID EX MEM WB`, show the forwarding arrow, and label the bubble inserted by interlocking.
+
+### Keyword Chain
+
+Data hazard -> RAW -> producer/consumer -> forwarding -> EX/MEM -> MEM/WB -> load-use hazard -> stall -> bubble -> pipeline interlock -> compiler scheduling -> correct execution
