@@ -373,3 +373,158 @@ Inclusion means data in an upper level is also available in a lower level, such 
 Top: fast, small, costly
 Bottom: slow, large, cheap
 ```
+
+---
+
+## Sources Used For Q2
+
+- [Virtual memory.ppt](<MaterialToRefer/Virtual memory.ppt>) - demand paging, address translation, page table, TLB, page replacement, paging, segmentation.
+- [Memory.pdf](<MaterialToRefer/Memory.pdf>) - virtual memory organization, MMU, address translation, segmentation, TLB.
+- [Computer Architecture, Sixth Edition: A Quantitative Approach](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>) - Appendix B virtual memory, page tables, TLB, paging versus segmentation.
+
+---
+
+## Q2. Discuss Memory Management Techniques Used In Virtual Memory Systems. Explain Paging And Segmentation With Examples.
+
+**CLO:** CLO 3 - Memory Organization and Management.
+
+### Figures To Use
+
+![Address translation in a paging system](<images/solutions/q2/virtual_memory_ppt_export/Slide24.PNG>)
+
+This is the main diagram to draw. It shows that a virtual address is split into `page number + offset`; the page number goes to the page table, the page table gives the frame number, and `frame number + same offset` becomes the physical address. This diagram directly supports paging and address translation.
+
+![Use of Translation Lookaside Buffer](<images/solutions/q2/virtual_memory_ppt_export/Slide29.PNG>)
+
+Use this if you want extra marks. It shows the real flow: first check TLB, then page table, and if the page is absent, a page fault loads the page from secondary memory. This explains why virtual memory is practical despite page tables being in memory.
+
+![Paging versus segmentation comparison](<images/solutions/q2/book_figures/paging_vs_segmentation_book_fig_b21_b22.png>)
+
+Use this to remember the difference: paging divides memory into fixed-size pages, while segmentation divides a program into logical variable-size parts such as code, data, stack, and heap.
+
+### Answer To Write
+
+Virtual memory is a memory management technique in which the logical address space seen by a program is separated from the physical main memory available in the computer. The program behaves as if it has a large continuous memory, but in reality only the required parts of the program are kept in RAM. The remaining parts are kept in secondary storage and brought into main memory only when needed. This is useful because physical memory is limited, while programs can be much larger than RAM.
+
+The CPU generates a virtual address during execution. This virtual address is translated into a physical address by the Memory Management Unit (MMU). The operating system maintains mapping information using page tables or segment tables. It also handles page faults, page replacement, protection, and sharing. The important techniques used in virtual memory are demand paging, paging, segmentation, page tables, TLB, page replacement, and protection bits.
+
+In demand paging, a page is loaded into main memory only when it is required. If a process refers to a page that is not currently in RAM, a page fault occurs. The operating system then finds the required page on disk, loads it into a free frame, updates the page table, and restarts the instruction. If there is no free frame, a page replacement algorithm such as FIFO, LRU, Clock, or Optimal is used to remove one old page. This is why virtual memory saves RAM: all pages of a process are not loaded at once.
+
+Paging divides virtual memory into fixed-size blocks called pages and physical memory into equal-size blocks called frames. The virtual address is divided into page number and offset. The page number is used to index the page table, which gives the frame number. The offset remains the same because the position inside the page and frame is unchanged.
+
+```text
+Virtual address  = Page number + Offset
+Physical address = Frame number + Offset
+```
+
+A page table entry generally contains the frame number, valid bit, dirty bit, reference bit, and protection bits. If the valid bit is 0, the page is not present in RAM and a page fault occurs. Since page tables are stored in memory, address translation can become slow. To reduce this overhead, a Translation Lookaside Buffer (TLB) is used. A TLB is a small fast cache that stores recently used page table entries. On a TLB hit, the frame number is obtained quickly. On a TLB miss, the page table is checked.
+
+Example of paging: suppose the virtual address is `3045`, page size is `2 KB = 2048 bytes`, and page 1 maps to frame 5.
+
+```text
+Page number = floor(3045 / 2048) = 1
+Offset      = 3045 - 2048 = 997
+Physical address = 5 x 2048 + 997 = 11237
+```
+
+So virtual address `3045` maps to physical address `11237`.
+
+Segmentation divides a program into logical variable-size units instead of fixed-size pages. A segment may represent code, data, stack, heap, or a procedure. A logical address in segmentation has a segment number and an offset. The segment number selects an entry in the segment table. Each segment table entry contains a base address and a limit. The offset is first checked against the limit. If it is valid, the physical address is calculated as `base + offset`; otherwise, a segmentation fault occurs.
+
+Example of segmentation: if segment 1 has base address `8000` and limit `2000`, then logical address `<1, 1200>` is valid because `1200 < 2000`. The physical address is:
+
+```text
+Physical address = 8000 + 1200 = 9200
+```
+
+But if segment 0 has limit `1000`, then `<0, 1200>` is invalid because the offset exceeds the segment limit.
+
+Paging and segmentation solve related problems in different ways. Paging is easier for the operating system because all pages and frames are the same size, and any page can be placed in any free frame. Its main drawback is internal fragmentation. Segmentation is closer to the programmer's view because it separates code, data, stack, and heap naturally. Its main drawback is external fragmentation because segments are variable in size.
+
+| Point | Paging | Segmentation |
+|---|---|---|
+| Division | Fixed-size pages | Variable-size logical segments |
+| Address | Page number + offset | Segment number + offset |
+| Visibility | Usually invisible to programmer | May be visible to programmer |
+| Fragmentation | Internal fragmentation | External fragmentation |
+| Replacement | Easier, same-size pages | Harder, variable-size segments |
+
+Thus, virtual memory improves memory utilization, allows execution of large programs, supports protection and sharing, and helps multiprogramming. Paging is more common because it is simple and efficient, while segmentation is useful for representing the logical structure of a program. Many systems combine both ideas using paged segmentation.
+
+### Draw In Exam
+
+Draw the paging address translation diagram first. If time remains, draw a small segmentation table showing `segment number -> base + offset` and write one line comparing paging and segmentation.
+## Sources Used For Q3
+
+- [pp2.ppt](<MaterialToRefer/pp2.ppt>) - cache coherence problem, snoopy protocol, write-invalidate, write-back protocol state machines.
+- [ParallelArchitecture_PP.ppt](<MaterialToRefer/ParallelArchitecture_PP.ppt>) - shared memory caches, cache coherence problem, invalidation-based coherence.
+- [ParallelArchitecture.pdf](<MaterialToRefer/ParallelArchitecture.pdf>) - shared-memory multiprocessors, UMA/NUMA, cc-NUMA and coherence requirement.
+- [DSM.ppt](<MaterialToRefer/DSM.ppt>) - memory coherence, consistency, write-invalidate/write-update.
+- [Computer Architecture, Sixth Edition: A Quantitative Approach](<Computer Architecture, Sixth Edition_ A Quantitative Approach ( PDFDrive ).pdf>) - Chapter 5 cache coherence, snooping, directory-based coherence.
+
+---
+
+## Q3. Explain Coherence Problems In Shared Memory Systems. Discuss Cache Coherence Protocols In Multiprocessor Systems.
+
+**CLO:** CLO 3 - Memory Organization and Management; CLO 4 - Advanced Architectures.
+
+### Figures To Use
+
+![Example cache coherence problem](<images/solutions/q3/pp2_ppt_export/Slide24.PNG>)
+
+This is the main problem diagram. It shows processors with private caches connected to shared memory. One processor writes a new value, but other caches may still contain the old value. Draw this first because it explains why coherence is needed.
+
+![Snoopy cache-coherence protocols](<images/solutions/q3/pp2_ppt_export/Slide30.PNG>)
+
+This is the main protocol diagram. It shows that every cache controller watches, or snoops, the shared bus. If a bus transaction affects a block present in a cache, that cache invalidates, updates, or supplies the value.
+
+![Two classes of cache coherence protocols](<images/solutions/q3/pp2_ppt_export/Slide29.PNG>)
+
+This slide is useful for structure. It reminds you that the two main protocol families are snooping and directory-based protocols.
+
+![Write-through invalidate protocol state diagram](<images/solutions/q3/pp2_ppt_export/Slide38.PNG>)
+
+Use this only if the question asks for protocol operation/state diagram. It shows the simple valid/invalid idea: a write by one processor invalidates other cached copies.
+
+### Answer To Write
+
+In a shared-memory multiprocessor system, all processors share the same main memory address space. Communication between processors happens by reading and writing shared variables in memory. To reduce memory access time, each processor usually has its own private cache. This improves performance, but it also creates the cache coherence problem.
+
+The problem occurs because the same memory block can exist in many places at the same time: in main memory, in processor P1's cache, in processor P2's cache, and so on. If one processor changes its cached copy, the other processors may continue to read old copies from their own caches. This means different processors can see different values for the same memory location.
+
+Example: assume memory location `X = 5`. Processor P1 reads `X`, so P1's cache stores `X = 5`. Processor P2 also reads `X`, so P2's cache also stores `X = 5`. Now processor P3 writes `X = 7`. If P1 and P2 are not informed, they may still read `X = 5`. This is stale data, and it is incorrect for shared-memory programming.
+
+A coherent memory system must satisfy three basic rules. First, if a processor writes a value and then reads the same location, it should get the value it wrote. Second, a write by one processor must eventually become visible to other processors. Third, all processors must see writes to the same memory location in the same order. The third point is called write serialization. Coherence is mainly about correctness for one memory location, while consistency deals with ordering of accesses to different memory locations.
+
+Cache coherence protocols are used to maintain correct values among multiple cached copies. The two main types are snooping protocols and directory-based protocols.
+
+In a snooping protocol, all caches are connected through a shared bus or broadcast medium. Every cache controller monitors all bus transactions. If a processor reads or writes a block, the transaction appears on the bus. Other caches check whether they have that block. If they do, they take the required action: invalidate the block, update it, supply the latest value, or change the block state. Snooping is simple and works well for small shared-memory multiprocessors, but it does not scale well because every transaction is broadcast to all caches.
+
+The most common snooping method is the write-invalidate protocol. Before a processor writes to a shared cache block, it obtains exclusive access to that block. Other cached copies are marked invalid. After that, no other processor can read the old value. If another processor later reads that block, it gets a cache miss and fetches the updated value.
+
+```text
+Initial: P1 cache has X = 5, P2 cache has X = 5
+P1 writes X = 7
+P1 sends invalidate on bus
+P2 marks its copy invalid
+If P2 reads X again, it fetches updated X = 7
+```
+
+Write-invalidate is preferred because it uses less bus bandwidth when there are many writes. The alternative is write-update, also called write-broadcast. In write-update, when one processor writes a shared block, the new value is sent to all caches that hold that block. This keeps all copies updated, but it creates high bus traffic because every write must be broadcast.
+
+Many protocols maintain a state for each cache block. In MSI, the states are Modified, Shared, and Invalid. Modified means this cache has the only updated copy and memory may be stale. Shared means one or more caches may have the block and memory is up to date. Invalid means the cache copy cannot be used. MESI adds an Exclusive state, where one cache has the only clean copy. This reduces bus traffic because a processor can write an exclusive block without first invalidating other caches.
+
+For larger multiprocessor systems, directory-based protocols are used. Here, a directory keeps track of which caches have each memory block and whether the block is shared or modified. On a read miss, the directory supplies the block or contacts the owner. On a write, it sends invalidation messages only to caches that actually have that block. This is more scalable than snooping because it avoids broadcasting every request to every processor.
+
+| Protocol | Idea | Best use |
+|---|---|---|
+| Snooping | Every cache watches the bus | Small UMA/SMP systems |
+| Directory-based | Directory stores sharer/owner information | Large NUMA/DSM systems |
+| Write-invalidate | Writer invalidates other copies | Most common, lower bandwidth |
+| Write-update | Writer broadcasts new value | Useful when many processors read after every write |
+
+Thus, coherence problems occur because private caches may store stale copies of shared data. Cache coherence protocols solve this by ensuring that writes are propagated and stale copies are invalidated or updated. Snooping is simpler, while directory-based coherence is more scalable.
+
+### Draw In Exam
+
+Draw the cache coherence problem diagram first: three processors with private caches and one shared memory. Show old value `X = 5` in some caches and new value `X = 7` after one processor writes. Then draw a bus-based snooping diagram and write: "cache controllers snoop bus and invalidate/update copies."
